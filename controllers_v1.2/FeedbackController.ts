@@ -1,14 +1,14 @@
-import { Order } from '../models/models';
+import { Feedback} from '../models_v1.2/models';
 import { ApiError } from '../errors/ApiError';
 import { NextFunction, Request, Response } from 'express';
 
 
-class OrderController {
+class FeedbackController {
     async create(req: Request, res: Response, next: NextFunction) {
-        const { user, book, quantity } = req.body;
-        let result = await Order.sequelize?.query('Insert into orders (user, book, quantity) VALUES (:user, :book, :quantity)',
+        const { mark, text, manager, anketa } = req.body;
+        let result = await Feedback.sequelize?.query('Insert into feedbacks (mark, text, manager, anketa) VALUES (:mark, :text, :manager, :anketa)',
             {
-                replacements: { user, book, quantity }
+                replacements: { mark, text, manager, anketa }
             }
         )
 
@@ -16,21 +16,21 @@ class OrderController {
     }
     async delete(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
-        let result = await Order.sequelize?.query('Delete from orders where id=:id', {
+        let result = await Feedback.sequelize?.query('Delete from feedbacks where id=:id', {
             replacements: { id }
         })
         res.send(result);
     }
     async update(req: Request, res: Response, next: NextFunction) {
-        const { id, user, book, quantity} = req.body;
-        let result = await Order.sequelize?.query('Update orders Set user=:user, book=:book, quantity=:quantity where id=:id',
+        const { id, mark, text, manager, anketa} = req.body;
+        let result = await Feedback.sequelize?.query('Update feedbacks Set mark=:mark, text=:text, manager=:manager, anketa=:anketa where id=:id',
             {
-                replacements: { user, book, quantity, id }
+                replacements: { mark, text, manager, anketa, id }
             })
         res.send(result);
     }
     async get(req: Request, res: Response, next: NextFunction) {
-        let result = await Order.sequelize?.query('Select * from orders')
+        let result = await Feedback.sequelize?.query('Select * from feedbacks')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
@@ -38,7 +38,7 @@ class OrderController {
     }
     async getById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
-        let result = await Order.sequelize?.query('Select * from orders where id=:id', {
+        let result = await Feedback.sequelize?.query('Select * from feedbacks where id=:id', {
             replacements: { id }
         })
         if (!result || !result[0][0]) {
@@ -48,8 +48,8 @@ class OrderController {
         res.send(result[0][0]);
     }
     async getFull(req: Request, res: Response, next: NextFunction) {
-        let result = await Order.sequelize
-            ?.query('Select users.username as user, books.name as book, books.author as author, quantity, quantity*books.price as price from orders left join books on orders.book = books.id left join users on orders.id = users.id ')
+        let result = await Feedback.sequelize
+            ?.query('Select mark, text, manager, anketa from feedbacks left join anketas on anketas.id = feedbacks.id left join managers on managers.id=feedbacks.manager')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
@@ -58,8 +58,8 @@ class OrderController {
     }
     async getFullById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
-        let result = await Order.sequelize
-            ?.query('Select users.username as user, books.name as book, books.author as author, quantity, quantity*books.price as price from orders left join books on orders.book = books.id left join users on orders.id = users.id where Orders.id=:id',
+        let result = await Feedback.sequelize
+            ?.query('Select mark, text, manager, anketa from feedbacks left join anketas on anketas.id = feedbacks.id left join managers on managers.id=feedbacks.manager where feedbacks.id=:id',
                 {
                     replacements: { id }
                 })
@@ -72,4 +72,4 @@ class OrderController {
 }
 
 
-export default new OrderController();
+export default new FeedbackController();

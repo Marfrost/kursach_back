@@ -1,14 +1,14 @@
-import { Order } from '../models/models';
+import { Anketa} from '../models_v1.2/models';
 import { ApiError } from '../errors/ApiError';
 import { NextFunction, Request, Response } from 'express';
 
 
-class OrderController {
+class AnketaController {
     async create(req: Request, res: Response, next: NextFunction) {
-        const { user, book, quantity } = req.body;
-        let result = await Order.sequelize?.query('Insert into orders (user, book, quantity) VALUES (:user, :book, :quantity)',
+        const { manager, user, responses } = req.body;
+        let result = await Anketa.sequelize?.query('Insert into anketas (manager, user, responses) VALUES (:manager, :user, :responses)',
             {
-                replacements: { user, book, quantity }
+                replacements: { manager, user, responses }
             }
         )
 
@@ -16,21 +16,21 @@ class OrderController {
     }
     async delete(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
-        let result = await Order.sequelize?.query('Delete from orders where id=:id', {
+        let result = await Anketa.sequelize?.query('Delete from anketas where id=:id', {
             replacements: { id }
         })
         res.send(result);
     }
     async update(req: Request, res: Response, next: NextFunction) {
-        const { id, user, book, quantity} = req.body;
-        let result = await Order.sequelize?.query('Update orders Set user=:user, book=:book, quantity=:quantity where id=:id',
+        const { id, manager, user, responses} = req.body;
+        let result = await Anketa.sequelize?.query('Update authors Set manager=:manager, user=:user, responses=:responses where id=:id',
             {
-                replacements: { user, book, quantity, id }
+                replacements: { manager, user, responses, id }
             })
         res.send(result);
     }
     async get(req: Request, res: Response, next: NextFunction) {
-        let result = await Order.sequelize?.query('Select * from orders')
+        let result = await Anketa.sequelize?.query('Select * from anketas')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
@@ -38,7 +38,7 @@ class OrderController {
     }
     async getById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
-        let result = await Order.sequelize?.query('Select * from orders where id=:id', {
+        let result = await Anketa.sequelize?.query('Select * from anketas where id=:id', {
             replacements: { id }
         })
         if (!result || !result[0][0]) {
@@ -48,8 +48,8 @@ class OrderController {
         res.send(result[0][0]);
     }
     async getFull(req: Request, res: Response, next: NextFunction) {
-        let result = await Order.sequelize
-            ?.query('Select users.username as user, books.name as book, books.author as author, quantity, quantity*books.price as price from orders left join books on orders.book = books.id left join users on orders.id = users.id ')
+        let result = await Anketa.sequelize
+            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user ')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
@@ -58,8 +58,8 @@ class OrderController {
     }
     async getFullById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
-        let result = await Order.sequelize
-            ?.query('Select users.username as user, books.name as book, books.author as author, quantity, quantity*books.price as price from orders left join books on orders.book = books.id left join users on orders.id = users.id where Orders.id=:id',
+        let result = await Anketa.sequelize
+            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user where anketas.id=:id',
                 {
                     replacements: { id }
                 })
@@ -72,4 +72,4 @@ class OrderController {
 }
 
 
-export default new OrderController();
+export default new AnketaController();
