@@ -3,12 +3,15 @@ import cors from 'cors';
 import db from './db';
 import router from './routes/index';
 import errorHandler from './middleware/errorHandlingMiddleware';
+import { ApiError } from './errors/ApiError';
+
 
 const PORT = process.env.PORT || 8080;
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 app.use('/api', router);
 app.use(errorHandler);
 async function start() {
