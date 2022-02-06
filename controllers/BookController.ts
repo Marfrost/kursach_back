@@ -23,7 +23,7 @@ class BookController {
     }
     async update(req: Request, res: Response, next: NextFunction) {
         const { id, name, description, year, pages, author, price } = req.body;
-        let result = await Book.sequelize?.query('Update authors Set name=:name, description=:description, year=:year, pages=:pages, author=:author, price=:price where id=:id',
+        let result = await Book.sequelize?.query('Update books Set name=:name, description=:description, year=:year, pages=:pages, author=:author, price=:price where id=:id',
             {
                 replacements: { name, description, year, pages, author, price, id }
             })
@@ -34,7 +34,7 @@ class BookController {
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
-        res.send(result);
+        res.send(result[0]);
     }
     async getById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;

@@ -24,6 +24,7 @@ const Order = db.define(
     quantity: { type: INTEGER },
     user: { type: INTEGER, references: { model: "users", key: 'id' } },
     book: { type: INTEGER, references: { model: "books", key: 'id' } },
+    status: { type:STRING},
 
   },
   {

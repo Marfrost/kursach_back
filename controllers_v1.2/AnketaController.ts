@@ -23,7 +23,7 @@ class AnketaController {
     }
     async update(req: Request, res: Response, next: NextFunction) {
         const { id, manager, user, responses} = req.body;
-        let result = await Anketa.sequelize?.query('Update authors Set manager=:manager, user=:user, responses=:responses where id=:id',
+        let result = await Anketa.sequelize?.query('Update anketas Set manager=:manager, user=:user, responses=:responses where id=:id',
             {
                 replacements: { manager, user, responses, id }
             })
@@ -34,7 +34,7 @@ class AnketaController {
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
-        res.send(result);
+        res.send(result[0]);
     }
     async getById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
@@ -49,7 +49,7 @@ class AnketaController {
     }
     async getFull(req: Request, res: Response, next: NextFunction) {
         let result = await Anketa.sequelize
-            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user ')
+            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user order by manager')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
@@ -59,7 +59,7 @@ class AnketaController {
     async getFullById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
         let result = await Anketa.sequelize
-            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user where anketas.id=:id',
+            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user order by manager where anketas.id=:id',
                 {
                     replacements: { id }
                 })

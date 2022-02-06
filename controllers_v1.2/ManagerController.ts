@@ -34,7 +34,7 @@ class ManagerController {
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
-        res.send(result);
+        res.send(result[0]);
     }
     async getById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
