@@ -57,7 +57,7 @@ class OrderController {
         const role=req.body['token']['role'];
         let whereQuery=role=== 'Admin' ? '' :'where users.id = :userId' ;
         let result = await Order.sequelize
-            ?.query(`Select users.username as user, books.name as book, authors.name as author, quantity, quantity*books.price as price,status from orders left join books on orders.book = books.id left join users on orders.id = users.id left join authors on books.author = authors.id ${whereQuery}`,
+            ?.query(`Select users.username as user, books.name as book, authors.name as author, quantity, quantity*books.price as price,status from orders left join books on orders.book = books.id left join users on orders."user" = users.id left join authors on books.author = authors.id ${whereQuery}`,
             {
                 replacements:{
                     userId:req.body['token']['id']
@@ -74,7 +74,7 @@ class OrderController {
         const role=req.body['token']['role'];
         let whereQuery=role=== 'Admin' ? 'where Orders.id=:id' :'where Orders.id=:id and users.id = :userId' ;
         let result = await Order.sequelize
-            ?.query(`Select users.username as user, books.name as book, authors.name as author, quantity, quantity*books.price as price,status from orders left join books on orders.book = books.id left join users on orders.id = users.id left join authors on books.author = authors.id ${whereQuery}`,
+            ?.query(`Select users.username as user, books.name as book, authors.name as author, quantity, quantity*books.price as price,status from orders left join books on orders.book = books.id left join users on orders."user" = users.id left join authors on books.author = authors.id ${whereQuery}`,
                 {
                     replacements: { id,userId:req.body['token']['id'] },
                 })
