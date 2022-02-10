@@ -6,7 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 class ManagerController {
     async create(req: Request, res: Response, next: NextFunction) {
         const { name, gender, photo } = req.body;
-        let result = await Manager.sequelize?.query('Insert into manager (name, gender,photo ) VALUES (:name, :gender,:photo )',
+        let result = await Manager.sequelize?.query('Insert into managers (name, gender,photo ) VALUES (:name, :gender,:photo )',
             {
                 replacements: { name, gender, photo }
             }
