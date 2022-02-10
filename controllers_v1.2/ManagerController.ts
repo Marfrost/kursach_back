@@ -23,7 +23,7 @@ class ManagerController {
     }
     async update(req: Request, res: Response, next: NextFunction) {
         const { id, name, gender, photo } = req.body;
-        let result = await Manager.sequelize?.query('Update managers Set name=:name, gender=:name,photo=:photo  where id=:id',
+        let result = await Manager.sequelize?.query('Update managers Set name=:name, gender=:gender, photo=:photo  where id=:id',
             {
                 replacements: { name, gender, photo, id }
             })
