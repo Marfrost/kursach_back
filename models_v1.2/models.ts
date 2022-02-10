@@ -1,5 +1,5 @@
 import db from '../db';
-import { INTEGER, STRING, JSONB } from 'sequelize';
+import { INTEGER, STRING, JSONB, TEXT } from 'sequelize';
 
 const User = db.define(
   'users',
@@ -23,7 +23,7 @@ const Manager = db.define(
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     name: { type:STRING, unique:true },
     gender: { type:STRING },
-    photo: { type:STRING }
+    photo: { type:TEXT }
   },
   {
     timestamps: false
