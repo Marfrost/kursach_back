@@ -49,7 +49,7 @@ class BookController {
     }
     async getFull(req: Request, res: Response, next: NextFunction) {
         let result = await Book.sequelize
-            ?.query('Select books.name, books.description, books.year, books.pages, books.price, author.name as author_name from books left join authors on books.author = authors.id')
+            ?.query('Select books.name, books.description, books.year, books.pages, books.price, authors.name as author_name from books left join authors on books.author = authors.id')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
