@@ -49,7 +49,7 @@ class AnketaController {
     }
     async getFull(req: Request, res: Response, next: NextFunction) {
         let result = await Anketa.sequelize
-            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user order by manager')
+            ?.query('Select *, anketas.id as id from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user order by manager')
         if (!result) {
             return next(ApiError.notFound("Not found"))
         }
@@ -59,7 +59,7 @@ class AnketaController {
     async getFullById(req: Request, res: Response, next: NextFunction) {
         const { id } = req.query;
         let result = await Anketa.sequelize
-            ?.query('Select * from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user order by manager where anketas.id=:id',
+            ?.query('Select *, anketas.id as id from anketas left join managers on managers.id = ankets.manager left join users on users.id = anketas.user order by manager where anketas.id=:id',
                 {
                     replacements: { id }
                 })
